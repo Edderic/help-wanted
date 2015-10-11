@@ -1,19 +1,23 @@
+jobPostings = new Meteor.Collection('jobPostings')
+
 if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault('counter', 0);
+  Session.setDefault('addingJobPosting', false);
 
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
+  Template.jobPostings.helpers({
+    addingJobPosting: function() {
+      return Session.get('addingJobPosting');
     }
   });
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
+  Template.jobPostings.events({
+    'click #add-job-posting': function() {
+      Session.set('addingJobPosting', true)
+    },
+  })
+
+
 }
 
 if (Meteor.isServer) {

@@ -1,14 +1,34 @@
 <head>
-  <title>help-wanted</title>
+  <title>Help Wanted</title>
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
-
-  {{> hello}}
+  <h1>Help Wanted</h1>
+  {{> jobPostings}}
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+
+<template name='jobPostings'>
+  <button id='add-job-posting'>+</button>
+  {{#if addingJobPosting }}
+    {{> jobPosting}}
+  {{ else}}
+  {{/if}}
+</template>
+
+<template name='jobPosting'>
+
+  <label for="job-title">Job Title: </label>
+  <input id='job-title' type="text" class='job-posting-field' placeholder='title'>
+
+  <label for="job-skills">Required Skills: </label>
+  <label><input type="checkbox" class='job-posting-field' id="manual_labor_box" value="">Manual labor</label><br>
+  <label><input type="checkbox" class='job-posting-field' id="cooking_box" value="">Cooking</label><br>
+  <label><input type="checkbox" class='job-posting-field' id="cleaning_box" value="">Cleaning</label><br>
+  <label><input type="checkbox" class='job-posting-field' id="nannying_box" value="">Nannying</label><br>
+  <label><input type="checkbox" class='job-posting-field' id="waiting_box" value="">Waiting</label><br>
+  <label><input type="checkbox" class='job-posting-field' id="waiting_box" value="">Other</label><br>
+
+  <label for="job-description" class='job-posting-field'>Job Description: </label>
+  <textarea id="job-description" class='job-posting-field' name="" cols="30" rows="10" placeholder='What is the job in 1-2 sentences? Anything relevant?'></textarea>
 </template>
