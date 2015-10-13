@@ -2,3 +2,16 @@
 label {
   display:block;
 }
+
+button {
+  display: block;
+}
+
+.invalid-field {
+  background-color: #FF9999;
+}
+
+span.input-validation {
+  color: #FF9999;
+  display:block;
+}
