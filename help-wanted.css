@@ -4,14 +4,22 @@ label {
 }
 
 button {
-  display: block;
+  display: inline-block;
 }
 
 .invalid-field {
-  background-color: #FF9999;
+  border-color: #FF9999;
 }
 
 span.input-validation {
   color: #FF9999;
   display:block;
+}
+
+li {
+  list-style-type: none;
+}
+
+.job-posting {
+  border: 1px solid black;
 }

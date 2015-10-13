@@ -9,46 +9,62 @@
 
 
 <template name='jobPostings'>
-  <button id='add-job-posting'>+</button>
   {{#if addingJobPosting }}
   {{> jobPosting}}
   {{ else}}
+    <button id='add-job-posting'>+</button>
   {{/if}}
 
-  {{#each jobPostings}}
   <ul>
+  {{#each jobPostings}}
     <li>
+      <span class='glyphicon glyphicon-triangle-right'></span>
       {{ title }}
     </li>
-  </ul>
   {{/each}}
+  </ul>
 </template>
 
 <template name='jobPosting'>
-  <div class="container-fluid">
-
+  <div class="job-posting container-fluid">
+    <h2>Add a job posting</h2>
     <label for="job-title">Job Title: </label>
-    <input id='job-title' type="text" class='job-posting-field' placeholder='title'>
-    {{#if jobTitleBlank}}
+    <input id='job-title' type="text" class='job-posting-field {{jobTitleFieldValidateClass}}' placeholder='title'>
+    {{#if jobTitleBlankAndNotCancelling}}
     <span class='input-validation'>cannot be empty</span>
     {{else}}
+      {{#if jobTitleNotBlankAndCancelling}}
+      <span class='input-validation'>cannot be filled-in when cancelling</span>
+      {{else}}
+      {{/if}}
     {{/if}}
 
     <label for="job-skills">Required Skills: </label>
-    <input id='job-required-skills' type="text" class='job-posting-field' placeholder='e.g. waiting'>
-    {{#if jobRequiredSkillsBlank}}
+    <input id='job-required-skills' type="text" class='job-posting-field {{jobRequiredSkillsFieldValidateClass}}' placeholder='e.g. waiting'>
+    {{#if jobRequiredSkillsBlankAndNotCancelling}}
     <span class='input-validation'>cannot be empty</span>
     {{else}}
+      {{#if jobRequiredSkillsNotBlankAndCancelling}}
+      <span class='input-validation'>cannot be filled-in when cancelling</span>
+      {{else}}
+      {{/if}}
     {{/if}}
 
 
     <label for="job-description">Job Description: </label>
-    <textarea id="job-description" class='job-posting-field' name="" cols="30" rows="10" placeholder='What is the job in 1-2 sentences? Anything relevant?'></textarea>
-    {{#if jobDescriptionBlank}}
+    <textarea id="job-description" class='job-posting-field {{jobDescriptionFieldValidateClass}}' name="" cols="30" rows="10" placeholder='What is the job in 1-2 sentences? Anything relevant?'></textarea>
+    {{#if jobDescriptionBlankAndNotCancelling}}
     <span class='input-validation'>cannot be empty</span>
     {{else}}
+      {{#if jobDescriptionNotBlankAndCancelling}}
+      <span class='input-validation'>cannot be filled-in when cancelling</span>
+      {{else}}
+      {{/if}}
     {{/if}}
 
+    <div class="buttons">
     <button id="save" class="job-posting">Save</button>
+    <button class="cancel job-posting">Cancel</button>
+    </div>
   </div>
 </template>
