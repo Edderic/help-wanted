@@ -3,6 +3,11 @@ label {
   display:block;
 }
 
+#google_translate_element {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
 button {
   display: inline-block;
 }
@@ -22,4 +27,19 @@ li {
 
 .job-posting {
   border: 1px solid black;
+  padding: 45px 15px 15px;
+  margin: 0 -15px 15px;
+
+}
+
+.navbar-fixed-top {
+  position: absolute;
+}
+
+body {
+}
+
+.main {
+  position: relative;
+  top: 60px;
 }
