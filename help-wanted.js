@@ -76,7 +76,7 @@ if (Meteor.isClient) {
   });
 
   Template.jobPostings.events({
-    'click .cancel.job-posting': function(e) {
+    'click .cancel.job-posting-btn': function(e) {
       // set session blanks
       updateJobPostingFieldStatuses();
       if (jobPostingFieldValues().reduce(haveBlankValues, true)) {
@@ -97,7 +97,7 @@ if (Meteor.isClient) {
       $('#job-title').focus();
     },
 
-    'click .job-posting#save': function(e, t) {
+    'click .job-posting-btn#save': function(e, t) {
       updateJobPostingFieldStatuses();
       Session.set('attemptingToCancel', false);
       validateInputFields();
