@@ -1,0 +1,16 @@
+#this file contains all the configuration for the test framework
+---
+
+#start with global configuration
+BROWSER: chrome
+#BROWSER: phantomjs  #warning Traceur doesn't work with PhantomJS
+#BROWSER: firefox
+LOG_LEVEL: INFO
+#LOG_LEVEL: debug
+BASE_URL: http://localhost:1234
+
+#and environment based overrides
+t_environments:
+  stage:
+    BASE_URL: http://your-staging.meteor.com
+
