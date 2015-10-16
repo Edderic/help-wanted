@@ -5,37 +5,37 @@
 
 <body>
   <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Help Wanted</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a id="google_translate_element"></a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Help Wanted</a>
       </div>
-    </nav>
-<script type="text/javascript">
+      <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a id="google_translate_element"></a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </nav>
+  <script type="text/javascript">
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,es', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, multilanguagePage: true}, 'google_translate_element');
 }
-</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<div class="container main">
-  <!-- <div id="google_translate_element"></div> -->
+  <div class="container main">
+    <!-- <div id="google_translate_element"></div> -->
 
-  {{> jobPostings}}
-</div>
+    {{> jobPostings}}
+  </div>
 </body>
 
 
@@ -43,63 +43,67 @@ function googleTranslateElementInit() {
   {{#if addingJobPosting }}
   {{> jobPosting}}
   {{ else}}
-    <button id='add-job-posting'>+</button>
+  <button id='add-job-posting'>+</button>
   {{/if}}
 
   <ul>
-  {{#each jobPostings}}
+    {{#each jobPostings}}
     <li>
       <span class='glyphicon glyphicon-triangle-right'></span>
       {{ title }}
     </li>
-  {{/each}}
+    {{/each}}
   </ul>
 </template>
 
 <template name='jobPosting'>
-  <div class="job-posting">
-    <h3> Add a job posting</h3>
-    <div class="form-group">
-    <label for="job-title">Job Title: </label>
-    <input id='job-title' type="text" class='form-control job-posting-field {{jobTitleFieldValidateClass}}' placeholder='title'>
-    {{#if jobTitleBlankAndNotCancelling}}
-    <span class='input-validation'>cannot be empty</span>
-    {{else}}
-      {{#if jobTitleNotBlankAndCancelling}}
-      <span class='input-validation'>cannot be filled-in when cancelling</span>
-      {{else}}
-      {{/if}}
-    {{/if}}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 job-posting">
+        <h3> Add a job posting</h3>
+        <div class="form-group">
+          <label for="job-title">Job Title: </label>
+          <input id='job-title' type="text" class='form-control job-posting-field {{jobTitleFieldValidateClass}}' placeholder='title'>
+          {{#if jobTitleBlankAndNotCancelling}}
+          <span class='input-validation'>cannot be empty</span>
+          {{else}}
+          {{#if jobTitleNotBlankAndCancelling}}
+          <span class='input-validation'>cannot be filled-in when cancelling</span>
+          {{else}}
+          {{/if}}
+          {{/if}}
+        </div>
+
+        <div class="form-group">
+          <label for="job-skills">Required Skills: </label>
+          <input id='job-required-skills' type="text" class='form-control job-posting-field {{jobRequiredSkillsFieldValidateClass}}' placeholder='e.g. waiting'>
+          {{#if jobRequiredSkillsBlankAndNotCancelling}}
+          <span class='input-validation'>cannot be empty</span>
+          {{else}}
+          {{#if jobRequiredSkillsNotBlankAndCancelling}}
+          <span class='input-validation'>cannot be filled-in when cancelling</span>
+          {{else}}
+          {{/if}}
+          {{/if}}
+        </div>
+
+
+        <div class="form-group">
+          <label for="job-description">Job Description: </label>
+          <textarea id="job-description" class='form-control job-posting-field {{jobDescriptionFieldValidateClass}}' name="" cols="30" rows="5" placeholder='What is the job in 1-2 sentences? Anything relevant?'></textarea>
+          {{#if jobDescriptionBlankAndNotCancelling}}
+          <span class='input-validation'>cannot be empty</span>
+          {{else}}
+          {{#if jobDescriptionNotBlankAndCancelling}}
+          <span class='input-validation'>cannot be filled-in when cancelling</span>
+          {{else}}
+          {{/if}}
+          {{/if}}
+        </div>
+
+        <button id="save" class="job-posting-btn btn btn-success">Save</button>
+        <button class="job-posting-btn cancel btn btn-danger">Cancel</button>
+      </div>
     </div>
-
-    <div class="form-group">
-    <label for="job-skills">Required Skills: </label>
-    <input id='job-required-skills' type="text" class='form-control job-posting-field {{jobRequiredSkillsFieldValidateClass}}' placeholder='e.g. waiting'>
-    {{#if jobRequiredSkillsBlankAndNotCancelling}}
-    <span class='input-validation'>cannot be empty</span>
-    {{else}}
-      {{#if jobRequiredSkillsNotBlankAndCancelling}}
-      <span class='input-validation'>cannot be filled-in when cancelling</span>
-      {{else}}
-      {{/if}}
-    {{/if}}
-    </div>
-
-
-    <div class="form-group">
-    <label for="job-description">Job Description: </label>
-    <textarea id="job-description" class='form-control job-posting-field {{jobDescriptionFieldValidateClass}}' name="" cols="30" rows="10" placeholder='What is the job in 1-2 sentences? Anything relevant?'></textarea>
-    {{#if jobDescriptionBlankAndNotCancelling}}
-    <span class='input-validation'>cannot be empty</span>
-    {{else}}
-      {{#if jobDescriptionNotBlankAndCancelling}}
-      <span class='input-validation'>cannot be filled-in when cancelling</span>
-      {{else}}
-      {{/if}}
-    {{/if}}
-    </div>
-
-    <button id="save" class="job-posting-btn btn btn-success">Save</button>
-    <button class="job-posting-btn cancel btn btn-danger">Cancel</button>
   </div>
 </template>

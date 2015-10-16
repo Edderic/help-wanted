@@ -27,8 +27,8 @@ li {
 
 .job-posting {
   border: 1px solid black;
-  padding: 45px 15px 15px;
-  margin: 0 -15px 15px;
+  border-radius: 2%;
+  padding: 15px;
 }
 
 .navbar-fixed-top {
