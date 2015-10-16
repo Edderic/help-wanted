@@ -106,7 +106,7 @@ if (Meteor.isClient) {
     },
 
     'keyup .job-posting-field': function(e,t) {
-      // Session.set('attemptingToCancel', false)
+      Session.set('attemptingToCancel', false)
       validateInputField(e)
     },
 
