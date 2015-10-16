@@ -30,6 +30,10 @@ if (Meteor.isClient) {
     return jobPostingFieldValues().reduce(haveNonBlankValues, true)
   }
 
+  function addJobPostingFieldsAllBlank() {
+    return jobPostingFieldValues().reduce(haveBlankValues, true)
+  }
+
   function validateInputFields() {
     if (addJobPostingFieldsAllValid()) {
       jobPostings.insert({
@@ -52,9 +56,7 @@ if (Meteor.isClient) {
   function validateInputField(e) {
     if (e.target.value == "") {
       Session.set(idCamelCase(e.target.id) + 'Blank', true)
-      $(e.target.id).addClass('invalid-field')
     } else {
-      $(e.target.id).removeClass('invalid-field')
       Session.set(idCamelCase(e.target.id) + 'Blank', false)
     }
   }
@@ -104,7 +106,7 @@ if (Meteor.isClient) {
     },
 
     'keyup .job-posting-field': function(e,t) {
-      Session.set('attemptingToCancel', false)
+      // Session.set('attemptingToCancel', false)
       validateInputField(e)
     },
 
@@ -113,7 +115,37 @@ if (Meteor.isClient) {
     }
   })
 
- var jobPostingHelpers = {
+  var jobPostingHelpers = {
+    jobTitleHelpBlockContent: function() {
+      if (jobPostingHelpers.jobTitleBlankAndNotCancelling()) {
+        return 'cannot be empty'
+      } else if (jobPostingHelpers.jobTitleNotBlankAndCancelling()) {
+        return 'must be non-empty when cancelling'
+      } else {
+        return ''
+      }
+    },
+
+    jobRequiredSkillsHelpBlockContent: function() {
+      if (jobPostingHelpers.jobRequiredSkillsBlankAndNotCancelling()) {
+        return 'cannot be empty'
+      } else if (jobPostingHelpers.jobRequiredSkillsNotBlankAndCancelling()) {
+        return 'must be non-empty when cancelling'
+      } else {
+        return ''
+      }
+    },
+
+    jobDescriptionHelpBlockContent: function() {
+      if (jobPostingHelpers.jobDescriptionBlankAndNotCancelling()) {
+        return 'cannot be empty'
+      } else if (jobPostingHelpers.jobDescriptionNotBlankAndCancelling()) {
+        return 'must be non-empty when cancelling'
+      } else {
+        return ''
+      }
+    },
+
     jobTitleBlankAndNotCancelling: function() {
       return Session.get('jobTitleBlank') &&
         Session.equals('attemptingToCancel', false)
@@ -147,30 +179,34 @@ if (Meteor.isClient) {
     jobTitleFieldValidateClass: function() {
       if ( jobPostingHelpers.jobTitleBlankAndNotCancelling() ||
           jobPostingHelpers.jobTitleNotBlankAndCancelling()) {
-        return 'invalid-field'
+        return 'has-error'
+      } else if(addJobPostingFieldsAllBlank()){
       } else {
-        ""
+        return 'has-success'
       }
     },
     jobRequiredSkillsFieldValidateClass: function() {
       if ( jobPostingHelpers.jobRequiredSkillsBlankAndNotCancelling() ||
           jobPostingHelpers.jobRequiredSkillsNotBlankAndCancelling()) {
-        return 'invalid-field'
+        return 'has-error'
+      } else if(addJobPostingFieldsAllBlank()){
       } else {
-        ""
+        return 'has-success'
       }
     },
 
     jobDescriptionFieldValidateClass: function() {
       if ( jobPostingHelpers.jobDescriptionBlankAndNotCancelling() ||
           jobPostingHelpers.jobDescriptionNotBlankAndCancelling()) {
-        return 'invalid-field'
+        return 'has-error'
+      } else if(addJobPostingFieldsAllBlank()){
       } else {
-        ""
+        return 'has-success'
       }
     }
   }
-  Template.jobPosting.helpers(jobPostingHelpers)
+
+  Template.jobPosting.helpers(jobPostingHelpers);
 }
 
 if (Meteor.isServer) {
