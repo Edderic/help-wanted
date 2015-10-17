@@ -92,6 +92,7 @@ if (Meteor.isClient) {
         title: $('#job-title').val(),
         requiredSkills: requiredSkillsObject(),
         description: $('#job-description').val(),
+        createdAt: Date()
       })
 
       Session.set('addingJobPosting', false)

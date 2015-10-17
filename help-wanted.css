@@ -24,7 +24,11 @@ li {
 button#add-job-posting {
 }
 
-.panel-heading {
+.livestamp {
+  color: #aaa;
+}
+
+.panel-heading, .summary-job-posting {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
@@ -43,6 +47,10 @@ button#add-job-posting {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.job-postings {
+  padding: 0;
 }
 .job-posting {
   border: 1px solid black;
