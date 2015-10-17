@@ -22,14 +22,28 @@ li {
 }
 
 button#add-job-posting {
-  float: right;
-    color: rgba(174,174,174,1);
-    padding: 5px 5px;
-    position: relative;
-    top: -5px;
-    right: -5px;
 }
 
+.panel-heading {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: stretch;
+  align-content: stretch;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
 .job-posting {
   border: 1px solid black;
   border-radius: 4px;
