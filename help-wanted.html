@@ -41,18 +41,24 @@ function googleTranslateElementInit() {
   {{#if addingJobPosting }}
   {{> jobPosting}}
   {{ else}}
-  <button id='add-job-posting'>+</button>
-  <ul>
-    {{#each jobPostings}}
-    <li>
-      <span class='glyphicon glyphicon-triangle-right'></span>
-      {{ title }}
-      {{ description }}
-    </li>
-    {{/each}}
-  </ul>
-  {{/if}}
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Job postings
 
+        <button id='add-job-posting' class='glyphicon glyphicon-plus'></button>
+      </h3>
+    </div>
+    <div class="panel-body">
+      {{#each jobPostings}}
+      <div>
+        <span class='glyphicon glyphicon-triangle-right'></span>
+        {{ title }}
+        {{ description }}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
 </template>
 
 <template name='jobPosting'>

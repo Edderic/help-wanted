@@ -21,6 +21,15 @@ li {
   list-style-type: none;
 }
 
+button#add-job-posting {
+  float: right;
+    color: rgba(174,174,174,1);
+    padding: 5px 5px;
+    position: relative;
+    top: -5px;
+    right: -5px;
+}
+
 .job-posting {
   border: 1px solid black;
   border-radius: 4px;
