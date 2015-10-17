@@ -264,10 +264,44 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
   Meteor.publish('jobPostings', function() {
-    return jobPostings.find({});
+    return jobPostings.find({}, {sort: {createdAt: -1}});
   })
 
   Meteor.startup(function () {
     // code to run on server at startup
+    if (jobPostings.find().count() == 0) {
+      jobPostings.insert(
+        { "title" : "Maid",
+          "requiredSkills" : { "anything" : false,
+            "cleaning" : true,
+            "construction" : false,
+            "cooking" : true,
+            "driving" : false,
+            "house_help" : false,
+            "landscaping" : false,
+            "nail_salon" : false,
+            "other" : false },
+            "description" : "We are looking for someone to clean our house.",
+            "createdAt" : "Sat Oct 16 2015 13:06:08 GMT-0400 (EDT)"
+        }
+      )
+
+      jobPostings.insert(
+        { "title" : "Janitor",
+          "requiredSkills" : { "anything" : false,
+            "cleaning" : true,
+            "construction" : false,
+            "cooking" : false,
+            "driving" : false,
+            "house_help" : false,
+            "landscaping" : false,
+            "nail_salon" : false,
+            "other" : false },
+            "description" : "XYZ Properties is looking for someone to maintain the high-cleaning standards of our office.",
+            "createdAt" : "Sat Oct 17 2015 14:06:08 GMT-0400 (EDT)"
+        }
+      )
+    }
+
   });
 }
