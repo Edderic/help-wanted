@@ -32,6 +32,19 @@ describe "Visiting the home page" do
         end
       end
     end
+
+    describe 'putting in valid information' do
+      describe 'and saving' do
+        it 'should hide the "Add a job" form' do
+          expect(page).not_to have_content 'Waiter'
+          fill_in 'Job Title', with: 'Construction Worker'
+          check 'Construction'
+          fill_in 'Job Description', with: 'Looking for someone who can paint'
+          click_on 'Save'
+          expect(page).to have_content 'Waiter'
+        end
+      end
+    end
   end
 end
 

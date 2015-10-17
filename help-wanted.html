@@ -42,8 +42,6 @@ function googleTranslateElementInit() {
   {{> jobPosting}}
   {{ else}}
   <button id='add-job-posting'>+</button>
-  {{/if}}
-
   <ul>
     {{#each jobPostings}}
     <li>
@@ -53,6 +51,8 @@ function googleTranslateElementInit() {
     </li>
     {{/each}}
   </ul>
+  {{/if}}
+
 </template>
 
 <template name='jobPosting'>
