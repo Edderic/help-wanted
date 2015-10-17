@@ -49,6 +49,7 @@ function googleTranslateElementInit() {
     <li>
       <span class='glyphicon glyphicon-triangle-right'></span>
       {{ title }}
+      {{ description }}
     </li>
     {{/each}}
   </ul>
@@ -59,15 +60,23 @@ function googleTranslateElementInit() {
     <div class="row">
       <div class="col-md-6 col-md-offset-3 job-posting">
         <h3> Add a job posting</h3>
-        <div class="form-group {{jobTitleFieldValidateClass}}">
+        <div class="form-group add-job-title {{jobTitleFieldValidateClass}}">
           <label for="job-title" class='control-label'>Job Title: </label>
           <input id='job-title' type="text" class='form-control job-posting-field ' placeholder='title'>
           <span class='help-block'>{{ jobTitleHelpBlockContent }}</span>
         </div>
 
-        <div class="form-group {{jobRequiredSkillsFieldValidateClass}}">
-          <label for="job-skills" class='control-label'>Required Skills: </label>
-          <input id='job-required-skills' type="text" class='form-control job-posting-field' placeholder='e.g. waiting'>
+        <div class="form-group {{jobRequiredSkillsFieldValidateClass}} add-job-required-skills">
+          <label for="job-required-skills" class='control-label'>Required Skills: </label>
+          <div class="checkbox"> <label> <input id='anything' type="checkbox" value=''> Anything </label> </div>
+          <div class="checkbox"> <label> <input id='cleaning' type="checkbox" value=''> Cleaning </label> </div>
+          <div class="checkbox"> <label> <input id='construction' type="checkbox" value=''> Construction </label> </div>
+          <div class="checkbox"> <label> <input id='cooking' type="checkbox" value=''> Cooking </label> </div>
+          <div class="checkbox"> <label> <input id='driving' type="checkbox" value=''> Driving </label> </div>
+          <div class="checkbox"> <label> <input id='house_help' type="checkbox" value=''> House help </label> </div>
+          <div class="checkbox"> <label> <input id='landscaping' type="checkbox" value=''> Landscaping </label> </div>
+          <div class="checkbox"> <label> <input id='nail_salon' type="checkbox" value=''> Nail Salon </label> </div>
+          <div class="checkbox"> <label> <input id='other' type="checkbox" value=''> Other </label> </div>
           <span class='help-block'>{{ jobRequiredSkillsHelpBlockContent }}</span>
         </div>
 

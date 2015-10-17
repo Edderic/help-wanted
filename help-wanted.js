@@ -1,11 +1,43 @@
 jobPostings = new Meteor.Collection('jobPostings')
 
 if (Meteor.isClient) {
-  function jobPostingFieldValues() {
-    var fields =  $('.job-posting-field').map(function(item) { return $(this).val() })
+  Meteor.subscribe('jobPostings')
+  function jobPostingInputs(inputs, method, args) {
+    var fields =  inputs.map(function(item) {
+      if (args === undefined) {
+        return $(this)[method]()
+      }
+      return $(this)[method](args)
+    })
     fields.reduce = Array.prototype.reduce;
 
     return fields;
+  }
+
+  function requiredSkillsObject() {
+    var inputs = jobPostingRequiredSkillsInputs();
+    inputs.reduce = Array.prototype.reduce;
+
+    return inputs.reduce(function(prev, curr){
+      prev[$(curr).attr('id')] = $(curr).is(':checked');
+      return prev;
+    }, {})
+  }
+
+  function jobPostingFieldValues() {
+    return jobPostingInputs($('.job-posting-field'), 'val')
+  }
+
+  function jobPostingRequiredSkills() {
+    return $('.add-job-required-skills input');
+  }
+
+  function jobPostingRequiredSkillsIsChecked() {
+    return jobPostingInputs(jobPostingRequiredSkills(), 'is', ':checked')
+  }
+
+  function jobPostingRequiredSkillsInputs() {
+    return $('.add-job-required-skills input');
   }
 
   function updateJobPostingFieldStatuses() {
@@ -16,6 +48,17 @@ if (Meteor.isClient) {
         Session.set(idCamelCase($(this).attr('id')) + 'Blank', false)
       }
     })
+
+    if (jobPostingRequiredSkillsHaveAtLeastOneSelected()) {
+      Session.set('jobRequiredSkillsBlank', false)
+    } else {
+      Session.set('jobRequiredSkillsBlank', true)
+    }
+  }
+
+  function addJobPostingCancellable() {
+    return jobPostingFieldValues().reduce(haveBlankValues, true) &&
+      !jobPostingRequiredSkillsHaveAtLeastOneSelected();
   }
 
   function haveNonBlankValues(prev, curr) {
@@ -26,8 +69,17 @@ if (Meteor.isClient) {
     return prev && curr === ""
   }
 
+  function haveAtLeastOneSelected(prev, curr) {
+    return prev || curr === true
+  }
+
+  function jobPostingRequiredSkillsHaveAtLeastOneSelected() {
+    return jobPostingRequiredSkillsIsChecked().reduce(haveAtLeastOneSelected, false)
+  }
+
   function addJobPostingFieldsAllValid() {
-    return jobPostingFieldValues().reduce(haveNonBlankValues, true)
+    return jobPostingFieldValues().reduce(haveNonBlankValues, true) &&
+      jobPostingRequiredSkillsHaveAtLeastOneSelected();
   }
 
   function addJobPostingFieldsAllBlank() {
@@ -38,7 +90,7 @@ if (Meteor.isClient) {
     if (addJobPostingFieldsAllValid()) {
       jobPostings.insert({
         title: $('#job-title').val(),
-        requiredSkills: $('#job-required-skills').val(),
+        requiredSkills: requiredSkillsObject(),
         description: $('#job-description').val(),
       })
 
@@ -81,7 +133,7 @@ if (Meteor.isClient) {
     'click .cancel.job-posting-btn': function(e) {
       // set session blanks
       updateJobPostingFieldStatuses();
-      if (jobPostingFieldValues().reduce(haveBlankValues, true)) {
+      if (addJobPostingCancellable()) {
         Session.set('addingJobPosting', false)
         Session.set('attemptingToCancel', false)
       } else {
@@ -210,6 +262,10 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
+  Meteor.publish('jobPostings', function() {
+    return jobPostings.find({});
+  })
+
   Meteor.startup(function () {
     // code to run on server at startup
   });

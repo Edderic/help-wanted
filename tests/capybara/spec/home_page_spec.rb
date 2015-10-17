@@ -1,4 +1,4 @@
-describe "Default Meteor App" do
+describe "Visiting the home page" do
   before(:each) do
     # tcfg.yml config is set to localhost:3000 using Chrome
     visit('/')
