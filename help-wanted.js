@@ -260,6 +260,37 @@ if (Meteor.isClient) {
   }
 
   Template.jobPosting.helpers(jobPostingHelpers);
+
+  Template.jobPostingListItem.helpers({
+    active: true
+  })
+
+  Template.jobPostingListItem.created=function(){
+    this.showMode = new ReactiveVar(false);
+  };
+
+  Template.jobPostingListItem.helpers({
+    showMode:function(){
+      return Template.instance().showMode.get();
+    },
+    skillsRequired: function() {
+      var arrayifiedRequiredSkills = _.pairs(this.requiredSkills)
+      arrayifiedRequiredSkills.reduce = Array.prototype.reduce
+      return arrayifiedRequiredSkills.reduce(function(prev, curr){
+        if (curr[1]) {
+          prev.push(curr[0]);
+        }
+        return prev;
+      }, [])
+    }
+  });
+
+  Template.jobPostingListItem.events({
+    'click .list-group-item': function(event,template) {
+      var showMode = template.showMode.get();
+      template.showMode.set(!showMode);
+    }
+  });
 }
 
 if (Meteor.isServer) {
@@ -272,7 +303,8 @@ if (Meteor.isServer) {
     if (jobPostings.find().count() == 0) {
       jobPostings.insert(
         { "title" : "Maid",
-          "requiredSkills" : { "anything" : false,
+          "requiredSkills" : {
+            "anything" : false,
             "cleaning" : true,
             "construction" : false,
             "cooking" : true,
@@ -280,15 +312,17 @@ if (Meteor.isServer) {
             "house_help" : false,
             "landscaping" : false,
             "nail_salon" : false,
-            "other" : false },
-            "description" : "We are looking for someone to clean our house.",
-            "createdAt" : "Sat Oct 16 2015 13:06:08 GMT-0400 (EDT)"
+            "other" : false
+          },
+          "description" : "We are looking for someone to clean our house.",
+          "createdAt" : "Sat Oct 16 2015 13:06:08 GMT-0400 (EDT)"
         }
       )
 
       jobPostings.insert(
         { "title" : "Janitor",
-          "requiredSkills" : { "anything" : false,
+          "requiredSkills" : {
+            "anything" : false,
             "cleaning" : true,
             "construction" : false,
             "cooking" : false,
@@ -296,9 +330,10 @@ if (Meteor.isServer) {
             "house_help" : false,
             "landscaping" : false,
             "nail_salon" : false,
-            "other" : false },
-            "description" : "XYZ Properties is looking for someone to maintain the high-cleaning standards of our office.",
-            "createdAt" : "Sat Oct 17 2015 14:06:08 GMT-0400 (EDT)"
+            "other" : false
+          },
+          "description" : "XYZ Properties is looking for someone to maintain the high-cleaning standards of our office.",
+          "createdAt" : "Sat Oct 17 2015 14:06:08 GMT-0400 (EDT)"
         }
       )
     }

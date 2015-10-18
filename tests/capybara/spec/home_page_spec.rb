@@ -10,7 +10,7 @@ describe "Visiting the home page" do
 
   describe 'clicking on the "Post a Job" button' do
     before do
-      click_on "+"
+      find("#add-job-posting").click
     end
 
     it 'should show the accompanying form' do
@@ -41,7 +41,7 @@ describe "Visiting the home page" do
           check 'Construction'
           fill_in 'Job Description', with: 'Looking for someone who can paint'
           click_on 'Save'
-          expect(page).to have_content 'Waiter'
+          expect(page).to have_content 'Construction Worker'
         end
       end
     end

@@ -28,6 +28,14 @@ button#add-job-posting {
   color: #aaa;
 }
 
+.list-group-item {
+  cursor: pointer;
+}
+
+.label {
+  display: inline-block;
+}
+
 .panel-heading, .summary-job-posting {
   display: -ms-flexbox;
   display: -webkit-flex;

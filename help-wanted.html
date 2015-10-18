@@ -52,21 +52,51 @@ function googleTranslateElementInit() {
           <button id='add-job-posting' class='btn btn-default glyphicon glyphicon-plus'></button>
         </div>
         <ul class="job-postings panel-body list-group">
-          {{#each jobPostings}}
-          <li class='list-group-item summary-job-posting'>
-            <div>
-              <span class='glyphicon glyphicon-triangle-right'></span>
-              <span class='.job-title'> {{ title }} </span>
-            </div>
-            <span class='.created-at-timeago'> {{ livestamp createdAt}} </span>
-            <!-- {{ description }} -->
-          </li>
+          {{#each jobPostingItem in jobPostings}}
+          {{> jobPostingListItem jobPostingItem }}
           {{/each}}
         </ul>
       </div>
     </div>
   </div>
   {{/if}}
+</template>
+
+<template name='jobPostingListItem'>
+  <li class='list-group-item' id='{{ _id}}'>
+    <div class='summary-job-posting'>
+      <div>
+        {{#if showMode}}
+        <span class='glyphicon glyphicon-triangle-bottom'></span>
+        {{else}}
+        <span class='glyphicon glyphicon-triangle-right'></span>
+        {{/if}}
+        <span class='.job-title'> {{ title }} </span>
+      </div>
+
+      <span class='.created-at-timeago'> {{ livestamp createdAt}} </span>
+    </div>
+  </li>
+
+  {{#if showMode}}
+  <div class="list-group-item job-posting-list-item-details">
+    <dl class="dl-horizontal">
+      <dt>Required Skills</dt>
+      <dd>
+      {{#each skillRequired in skillsRequired}}
+      <span class="label label-default">
+        {{skillRequired}}
+      </span>
+      {{/each}}
+      </dd>
+    </dl>
+    <dl class="dl-horizontal">
+      <dt>Description</dt>
+      <dd>{{ description}}</dd>
+    </dl>
+  </div>
+  {{/if }}
+
 </template>
 
 <template name='jobPosting'>
