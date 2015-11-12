@@ -373,7 +373,7 @@ if (Meteor.isServer) {
           },
           "description" : "XYZ Properties is looking for someone to maintain the high-cleaning standards of our office.",
           "createdAt" : "Sat Oct 17 2015 14:06:08 GMT-0400 (EDT)",
-          "address" : "601 Raritan Avenue (corner of North 6th), Highland Park, NJ 08904)"
+          "address" : "601 Raritan Avenue, Highland Park, NJ 08904"
         }
       )
     }
