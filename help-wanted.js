@@ -90,6 +90,7 @@ if (Meteor.isClient) {
     if (addJobPostingFieldsAllValid()) {
       jobPostings.insert({
         title: $('#job-title').val(),
+        address: $('#job-address').val(),
         requiredSkills: requiredSkillsObject(),
         description: $('#job-description').val(),
         createdAt: Date()
@@ -179,6 +180,16 @@ if (Meteor.isClient) {
       }
     },
 
+    jobAddressHelpBlockContent: function() {
+      if (jobPostingHelpers.jobAddressBlankAndNotCancelling()) {
+        return 'cannot be empty'
+      } else if (jobPostingHelpers.jobAddressNotBlankAndCancelling()) {
+        return 'must be non-empty when cancelling'
+      } else {
+        return ''
+      }
+    },
+
     jobRequiredSkillsHelpBlockContent: function() {
       if (jobPostingHelpers.jobRequiredSkillsBlankAndNotCancelling()) {
         return 'cannot be empty'
@@ -198,6 +209,17 @@ if (Meteor.isClient) {
         return ''
       }
     },
+
+    jobAddressBlankAndNotCancelling: function() {
+      return Session.get('jobAddressBlank') &&
+        Session.equals('attemptingToCancel', false)
+    },
+
+    jobAddressNotBlankAndCancelling: function() {
+      return Session.equals('jobAddressBlank', false) &&
+        Session.equals('attemptingToCancel', true)
+    },
+
 
     jobTitleBlankAndNotCancelling: function() {
       return Session.get('jobTitleBlank') &&
@@ -256,6 +278,16 @@ if (Meteor.isClient) {
       } else {
         return 'has-success'
       }
+    },
+
+    jobAddressValidateClass: function() {
+      if ( jobPostingHelpers.jobAddressBlankAndNotCancelling() ||
+          jobPostingHelpers.jobAddressNotBlankAndCancelling()) {
+        return 'has-error'
+      } else if(addJobPostingFieldsAllBlank()){
+      } else {
+        return 'has-success'
+      }
     }
   }
 
@@ -270,6 +302,12 @@ if (Meteor.isClient) {
   };
 
   Template.jobPostingListItem.helpers({
+    encodedAddress: function() {
+      return encodeURI(this.address);
+    },
+    encodedUserAddress: function() {
+      return encodeURI("65 Witherspoon Street, Princeton, NJ 08542");
+    },
     showMode:function(){
       return Template.instance().showMode.get();
     },
@@ -315,7 +353,8 @@ if (Meteor.isServer) {
             "other" : false
           },
           "description" : "We are looking for someone to clean our house.",
-          "createdAt" : "Sat Oct 16 2015 13:06:08 GMT-0400 (EDT)"
+          "createdAt" : "Sat Oct 16 2015 13:06:08 GMT-0400 (EDT)",
+          "address" : "123 Main Street, Princeton, NJ"
         }
       )
 
@@ -333,7 +372,8 @@ if (Meteor.isServer) {
             "other" : false
           },
           "description" : "XYZ Properties is looking for someone to maintain the high-cleaning standards of our office.",
-          "createdAt" : "Sat Oct 17 2015 14:06:08 GMT-0400 (EDT)"
+          "createdAt" : "Sat Oct 17 2015 14:06:08 GMT-0400 (EDT)",
+          "address" : "601 Raritan Avenue (corner of North 6th), Highland Park, NJ 08904)"
         }
       )
     }

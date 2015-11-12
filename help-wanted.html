@@ -32,9 +32,9 @@ function googleTranslateElementInit() {
   </div>
   <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <!-- <li class="active"><a href="#">Home</a></li> -->
+      <!-- <li><a href="#about">About</a></li> -->
+      <!-- <li><a href="#contact">Contact</a></li> -->
       <li><a id="google_translate_element"></a></li>
     </ul>
   </div><!--/.nav-collapse -->
@@ -94,6 +94,16 @@ function googleTranslateElementInit() {
       <dt>Description</dt>
       <dd>{{ description}}</dd>
     </dl>
+    <dl class="dl-horizontal">
+      <dt>Address</dt>
+      <dd>{{ address}}</dd>
+    </dl>
+    <dl class="dl-horizontal">
+      <dt>Map</dt>
+      <dd>
+      <iframe height="300" src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyAdMp4hVnJZ1KxgiKTNENn1X1rJB9w40AI&origin={{encodedUserAddress}}&destination={{encodedAddress}}" allowfullscreen></iframe>
+      </dd>
+    </dl>
   </div>
   {{/if }}
 
@@ -108,6 +118,12 @@ function googleTranslateElementInit() {
           <label for="job-title" class='control-label'>Job Title: </label>
           <input id='job-title' type="text" class='form-control job-posting-field ' placeholder='title'>
           <span class='help-block'>{{ jobTitleHelpBlockContent }}</span>
+        </div>
+
+        <div class="form-group add-job-address {{jobAddressValidateClass}}">
+          <label for="job-address" class='control-label'>Address: </label>
+          <input id='job-address' type="text" class='form-control job-posting-field' placeholder='65 Witherspoon Street, Princeton, NJ 08542'>
+          <span class='help-block'>{{ jobAddressHelpBlockContent }}</span>
         </div>
 
         <div class="form-group {{jobRequiredSkillsFieldValidateClass}} add-job-required-skills">
