@@ -132,17 +132,6 @@ if (Meteor.isClient) {
   });
 
   Template.jobPostings.events({
-    'click .cancel.job-posting-btn': function(e) {
-      // set session blanks
-      updateJobPostingFieldStatuses();
-      if (addJobPostingCancellable()) {
-        Session.set('addingJobPosting', false)
-        Session.set('attemptingToCancel', false)
-      } else {
-        Session.set('attemptingToCancel', true)
-      }
-    },
-
     'click #add-job-posting': function() {
       Session.set('addingJobPosting', true)
       Session.set('attemptingToCancel', false)
@@ -329,6 +318,15 @@ if (Meteor.isClient) {
       template.showMode.set(!showMode);
     }
   });
+
+  Template.cancelAddJobPostingModal.events({
+    'click .confirm': function(e,t) {
+      // set session blanks
+      updateJobPostingFieldStatuses();
+      Session.set('addingJobPosting', false)
+      Session.set('attemptingToCancel', false)
+    }
+  })
 }
 
 if (Meteor.isServer) {

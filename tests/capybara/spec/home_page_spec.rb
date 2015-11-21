@@ -27,8 +27,17 @@ describe "Visiting the home page" do
           click_on "Cancel"
         end
 
-        specify 'should have the required skills section not have an error' do
-          expect( find('.add-job-required-skills.has-success')).not_to be_nil
+        specify 'should show a confirmation modal' do
+          expect(page).to have_content "Are you sure you want to cancel? All the information in this form will be deleted."
+        end
+
+        describe 'I click on "Yes, I want to cancel"' do
+          it 'should hide the modal' do
+            click_on "Yes, I want to cancel"
+            sleep 0.5
+            expect(page).not_to have_content "Are you sure?"
+            expect(page).not_to have_content "Add a job posting"
+          end
         end
       end
     end
@@ -38,6 +47,7 @@ describe "Visiting the home page" do
         it 'should hide the "Add a job" form' do
           expect(page).not_to have_content 'Waiter'
           fill_in 'Job Title', with: 'Construction Worker'
+          fill_in 'Address', with: '123 Main St., Princeton, NJ'
           check 'Construction'
           fill_in 'Job Description', with: 'Looking for someone who can paint'
           click_on 'Save'
