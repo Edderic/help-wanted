@@ -57,6 +57,30 @@ button#add-job-posting {
   align-items: center;
 }
 
+.summary-job-posting .left-hand-with-arrow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 200px;
+}
+
+.map {
+    height: 300px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.map-mode-btns {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.summary-job-posting .left-hand-summary {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
 .job-postings {
   padding: 0;
 }

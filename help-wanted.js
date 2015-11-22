@@ -2,6 +2,24 @@ jobPostings = new Meteor.Collection('jobPostings')
 
 if (Meteor.isClient) {
   Meteor.subscribe('jobPostings')
+  calculateCoords();
+
+  function calculateCoords() {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    }
+
+    function success(pos) {
+      var crd = pos.coords;
+      var originCoords = String(crd.latitude + "," + crd.longitude)
+      Session.set('coordinates', originCoords);
+    }
+
+    window.navigator.geolocation.getCurrentPosition(success)
+  }
+
   function jobPostingInputs(inputs, method, args) {
     var fields =  inputs.map(function(item) {
       if (args === undefined) {
@@ -88,15 +106,23 @@ if (Meteor.isClient) {
 
   function validateInputFields() {
     if (addJobPostingFieldsAllValid()) {
-      jobPostings.insert({
-        title: $('#job-title').val(),
-        address: $('#job-address').val(),
-        requiredSkills: requiredSkillsObject(),
-        description: $('#job-description').val(),
-        createdAt: Date()
-      })
+      var address = $('#job-address').val()
+      Meteor.call('geocode', address, function(error, result) {
+        console.log("result.data", result.data);
+        var firstResult = result.data.results[0]
+        var coordinates = firstResult.geometry.location
 
-      Session.set('addingJobPosting', false)
+        jobPostings.insert({
+          title: $('#job-title').val(),
+          address: address,
+          coordinates: coordinates,
+          requiredSkills: requiredSkillsObject(),
+          description: $('#job-description').val(),
+          createdAt: Date()
+        })
+
+        Session.set('addingJobPosting', false)
+      })
     }
   }
 
@@ -169,6 +195,7 @@ if (Meteor.isClient) {
       }
     },
 
+    // should delete the Cancelling parts
     jobAddressHelpBlockContent: function() {
       if (jobPostingHelpers.jobAddressBlankAndNotCancelling()) {
         return 'cannot be empty'
@@ -288,14 +315,64 @@ if (Meteor.isClient) {
 
   Template.jobPostingListItem.created=function(){
     this.showMode = new ReactiveVar(false);
+    this.calculatedDistance = new ReactiveVar("");
+    this.showMapsMode = new ReactiveVar("Directions")
   };
 
-  Template.jobPostingListItem.helpers({
+  var jobPostingListItemHelpers = {
+    distance: function() {
+      var instance = Template.instance();
+      var destination = jobPostingListItemHelpers.encodedAddress.apply(this);
+
+      // Only calculate if the coordinates already exist and distance has not been calculated
+      if (Session.get('coordinates') && !instance.calculatedDistance.get()) {
+        Meteor.call('getDistance', Session.get('coordinates'), destination, function(error, result) {
+          console.log(result)
+          var data = result.data;
+          var dist = data.rows[0].elements[0].distance.text
+          instance.calculatedDistance.set(dist);
+        })
+      }
+
+      return Template.instance().calculatedDistance.get() || "";
+    },
     encodedAddress: function() {
       return encodeURI(this.address);
     },
     encodedUserAddress: function() {
-      return encodeURI("65 Witherspoon Street, Princeton, NJ 08542");
+
+      // Setting should be geolocation
+      // or it could be a set address
+      return Session.get('coordinates') || ""
+    },
+
+    mapsURI: function() {
+      var _self = this;
+      var apiKey = Meteor.settings.public.google_maps_embed_api_key
+      if (jobPostingListItemHelpers.encodedUserAddress()) {
+        if (Template.instance().showMapsMode.get() == 'Directions') {
+          var uri = "https://www.google.com/maps/embed/v1/directions?key="+ apiKey + "&origin=" +
+          jobPostingListItemHelpers.encodedUserAddress() +
+            "&destination=" +
+            jobPostingListItemHelpers.encodedAddress.apply(_self);
+
+          return uri
+        } else {
+          var crd = _self.coordinates;
+          var uri = "https://www.google.com/maps/embed/v1/streetview?key="+ apiKey + "&location=" +
+            crd.lat + "," + crd.lng
+          return uri
+        }
+      } else {
+        return ""
+      }
+    },
+
+    streetViewActive: function() {
+      return Template.instance().showMapsMode.get() == 'Streetview' ? 'active' : ''
+    },
+    directionsActive: function() {
+      return Template.instance().showMapsMode.get() == 'Directions' ? 'active' : ''
     },
     showMode:function(){
       return Template.instance().showMode.get();
@@ -310,12 +387,25 @@ if (Meteor.isClient) {
         return prev;
       }, [])
     }
-  });
+  }
+
+  Template.jobPostingListItem.helpers(jobPostingListItemHelpers);
+
 
   Template.jobPostingListItem.events({
-    'click .list-group-item': function(event,template) {
+    'click .list-group-item.summary-view': function(event,template) {
       var showMode = template.showMode.get();
       template.showMode.set(!showMode);
+    },
+
+    'click .directions': function(event,template) {
+      event.preventDefault();
+      template.showMapsMode.set('Directions');
+    },
+
+    'click .streetview': function(event,template) {
+      event.preventDefault();
+      template.showMapsMode.set('Streetview');
     }
   });
 
@@ -336,6 +426,21 @@ if (Meteor.isServer) {
 
   Meteor.startup(function () {
     // code to run on server at startup
+    //
+    Meteor.methods({
+      getDistance: function(origin, destination) {
+        var key = Meteor.settings.google_maps_distance_matrix_api_key;
+        var url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+ origin + "&destinations=" + destination + "&key=" + key
+
+        return Meteor.http.get(url);
+      },
+      geocode: function(address) {
+        var key = Meteor.settings.google_maps_geolocation_api_key;
+        var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURI(address) + "&key=" + key
+        return Meteor.http.get(url);
+      }
+    })
+
     if (jobPostings.find().count() == 0) {
       jobPostings.insert(
         { "title" : "Maid",

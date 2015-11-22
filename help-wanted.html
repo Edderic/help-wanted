@@ -64,18 +64,21 @@ function googleTranslateElementInit() {
 </template>
 
 <template name='jobPostingListItem'>
-  <li class='list-group-item' id='{{ _id}}'>
+  <li class='list-group-item summary-view' id='{{ _id}}'>
     <div class='summary-job-posting'>
-      <div>
+      <div class='left-hand-with-arrow'>
         {{#if showMode}}
         <span class='glyphicon glyphicon-triangle-bottom'></span>
         {{else}}
         <span class='glyphicon glyphicon-triangle-right'></span>
         {{/if}}
-        <span class='.job-title'> {{ title }} </span>
+        <div class="left-hand-summary">
+        <span class='job-title'> {{ title }} </span>
+        <span class='distance'> {{ distance }} </span>
+        </div>
       </div>
 
-      <span class='.created-at-timeago'> {{ livestamp createdAt}} </span>
+      <span class='created-at-timeago'> {{ livestamp createdAt}} </span>
     </div>
   </li>
 
@@ -102,7 +105,11 @@ function googleTranslateElementInit() {
     <dl class="dl-horizontal">
       <dt>Map</dt>
       <dd>
-      <iframe height="300" src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyAdMp4hVnJZ1KxgiKTNENn1X1rJB9w40AI&origin={{encodedUserAddress}}&destination={{encodedAddress}}" allowfullscreen></iframe>
+      <div class="btn-group map-mode-btns" role="group" aria-label="First group">
+        <button type="button" class="{{directionsActive}} directions btn btn-default">Directions</button>
+        <button type="button" class="{{streetViewActive}} streetview btn btn-default">Street View</button>
+      </div>
+      <iframe class='map' src="{{mapsURI}}"></iframe>
       </dd>
     </dl>
   </div>
