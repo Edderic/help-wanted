@@ -1,5 +1,25 @@
 jobPostings = new Meteor.Collection('jobPostings')
 
+function createJobPosting(argsObject, callback) {
+  Meteor.call('geocode', argsObject.address, function(error, result) {
+    var firstResult = result.data.results[0]
+    var coordinates = firstResult.geometry.location
+
+    jobPostings.insert({
+      title: argsObject.title,
+      address: argsObject.address,
+      coordinates: coordinates,
+      requiredSkills: argsObject.requiredSkills,
+      description: argsObject.description,
+      createdAt: Date()
+    })
+
+    if (typeof callback === 'function') {
+      callback();
+    }
+  })
+}
+
 if (Meteor.isClient) {
   Meteor.subscribe('jobPostings')
   calculateCoords();
@@ -104,23 +124,17 @@ if (Meteor.isClient) {
     return jobPostingFieldValues().reduce(haveBlankValues, true)
   }
 
+
   function validateInputFields() {
     if (addJobPostingFieldsAllValid()) {
-      var address = $('#job-address').val()
-      Meteor.call('geocode', address, function(error, result) {
-        console.log("result.data", result.data);
-        var firstResult = result.data.results[0]
-        var coordinates = firstResult.geometry.location
+      var argsObject = {
+        title: $('#job-title').val(),
+        address: $('#job-address').val(),
+        requiredSkills: requiredSkillsObject(),
+        description: $('#job-description').val()
+      }
 
-        jobPostings.insert({
-          title: $('#job-title').val(),
-          address: address,
-          coordinates: coordinates,
-          requiredSkills: requiredSkillsObject(),
-          description: $('#job-description').val(),
-          createdAt: Date()
-        })
-
+      createJobPosting(argsObject, function() {
         Session.set('addingJobPosting', false)
       })
     }
@@ -358,9 +372,9 @@ if (Meteor.isClient) {
 
           return uri
         } else {
-          var crd = _self.coordinates;
+          var crd = this.coordinates;
           var uri = "https://www.google.com/maps/embed/v1/streetview?key="+ apiKey + "&location=" +
-            crd.lat + "," + crd.lng
+          crd.lat + "," + crd.lng
           return uri
         }
       } else {
@@ -442,27 +456,26 @@ if (Meteor.isServer) {
     })
 
     if (jobPostings.find().count() == 0) {
-      jobPostings.insert(
-        { "title" : "Maid",
-          "requiredSkills" : {
-            "anything" : false,
-            "cleaning" : true,
-            "construction" : false,
-            "cooking" : true,
-            "driving" : false,
-            "house_help" : false,
-            "landscaping" : false,
-            "nail_salon" : false,
-            "other" : false
-          },
-          "description" : "We are looking for someone to clean our house.",
-          "createdAt" : "Sat Oct 16 2015 13:06:08 GMT-0400 (EDT)",
-          "address" : "123 Main Street, Princeton, NJ"
-        }
-      )
+      createJobPosting({
+        "title" : "Maid",
+        "requiredSkills" : {
+          "anything" : false,
+          "cleaning" : true,
+          "construction" : false,
+          "cooking" : true,
+          "driving" : false,
+          "house_help" : false,
+          "landscaping" : false,
+          "nail_salon" : false,
+          "other" : false
+        },
+        "description" : "We are looking for someone to clean our house.",
+        "createdAt" : "Sat Oct 16 2015 13:06:08 GMT-0400 (EDT)",
+        "address" : "123 Main Street, Princeton, NJ"
+      })
 
-      jobPostings.insert(
-        { "title" : "Janitor",
+      createJobPosting({
+        "title" : "Janitor",
           "requiredSkills" : {
             "anything" : false,
             "cleaning" : true,
@@ -477,8 +490,7 @@ if (Meteor.isServer) {
           "description" : "XYZ Properties is looking for someone to maintain the high-cleaning standards of our office.",
           "createdAt" : "Sat Oct 17 2015 14:06:08 GMT-0400 (EDT)",
           "address" : "601 Raritan Avenue, Highland Park, NJ 08904"
-        }
-      )
+      })
     }
 
   });
