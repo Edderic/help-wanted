@@ -199,6 +199,25 @@ if (Meteor.isClient) {
   })
 
   var jobPostingHelpers = {
+    requiredSkills: function requiredSkills() {
+      return [
+        {'id': 'hair_stylist', english: 'Hair Stylist', spanish: 'Estilista'},
+        {'id': 'baby_sitter', english: 'Baby Sitter', spanish: 'Ni&ntilde;era'},
+        {'id': 'receptionist', english: 'Receptionist', spanish: 'Receptionista'},
+        {'id': 'nurse', english: 'Nurse', spanish: 'Enfermer(o/a)'},
+        {'id': 'driver', english: 'Driver', spanish: 'Chofer'},
+        {'id': 'waiter', english: 'Waiter/Waitress', spanish: 'Mesero/Mesera'},
+        {'id': 'construction', english: 'Construction', spanish: 'Trabajo de constructi&oacute;n'},
+        {'id': 'cleaning_service', english: 'Cleaning Service', spanish: 'Personal para limpieza'},
+        {'id': 'restaurant_personnel', english: 'Restaurant Personnel', spanish: 'Personal para restaurante'},
+        {'id': 'landscaping', english: 'Landscaping', spanish: 'Trabajos de Jardineria'},
+        {'id': 'nail_salon', english: 'Nail Salon', spanish: 'Trabajos de est&eacute;tica de u&ntilde;as'},
+        {'id': 'chef', english: 'Chef', spanish: 'Cocinero'},
+        {'id': 'cashier', english: 'Cashier', spanish: 'Cashier'},
+        {'id': 'secretary', english: 'Secretary', spanish: 'Secretaria'}
+      ]
+    },
+
     jobTitleHelpBlockContent: function() {
       if (jobPostingHelpers.jobTitleBlankAndNotCancelling()) {
         return 'cannot be empty'
@@ -396,7 +415,14 @@ if (Meteor.isClient) {
       arrayifiedRequiredSkills.reduce = Array.prototype.reduce
       return arrayifiedRequiredSkills.reduce(function(prev, curr){
         if (curr[1]) {
-          prev.push(curr[0]);
+          var requiredSkill = jobPostingHelpers.requiredSkills().reduce(function(p, c) {
+            if (c.id == curr[0])
+              p.push(c)
+            return p
+          }, [])[0]
+
+          var tag = requiredSkill.english + "/" + requiredSkill.spanish
+          prev.push(tag);
         }
         return prev;
       }, [])
@@ -431,6 +457,18 @@ if (Meteor.isClient) {
       Session.set('attemptingToCancel', false)
     }
   })
+
+  Template.addJobPostingRequiredSkill.helpers({
+    id: function() {
+      return this.id;
+    },
+    english: function() {
+      return this.english;
+    },
+    spanish: function() {
+      return this.spanish;
+    }
+  })
 }
 
 if (Meteor.isServer) {
@@ -457,19 +495,11 @@ if (Meteor.isServer) {
 
     if (jobPostings.find().count() == 0) {
       createJobPosting({
-        "title" : "Maid",
+        "title" : "Hair Stylist",
         "requiredSkills" : {
-          "anything" : false,
-          "cleaning" : true,
-          "construction" : false,
-          "cooking" : true,
-          "driving" : false,
-          "house_help" : false,
-          "landscaping" : false,
-          "nail_salon" : false,
-          "other" : false
+          "hair_stylist": true
         },
-        "description" : "We are looking for someone to clean our house.",
+        "description" : "We are looking for someone with great attention to detail",
         "createdAt" : "Sat Oct 16 2015 13:06:08 GMT-0400 (EDT)",
         "address" : "123 Main Street, Princeton, NJ"
       })
@@ -477,16 +507,8 @@ if (Meteor.isServer) {
       createJobPosting({
         "title" : "Janitor",
           "requiredSkills" : {
-            "anything" : false,
-            "cleaning" : true,
-            "construction" : false,
-            "cooking" : false,
-            "driving" : false,
-            "house_help" : false,
-            "landscaping" : false,
-            "nail_salon" : false,
-            "other" : false
-          },
+          "cleaning_service" : true
+        },
           "description" : "XYZ Properties is looking for someone to maintain the high-cleaning standards of our office.",
           "createdAt" : "Sat Oct 17 2015 14:06:08 GMT-0400 (EDT)",
           "address" : "601 Raritan Avenue, Highland Park, NJ 08904"
